@@ -7,6 +7,8 @@
 //  - 「さいごに届いた」「うごかした（run が来たか）」を一覧に出す
 //  - ひらがな拡張（style: "hiragana"）の文言・テレポート・ブロックをおく・スポーンにも対応
 //  - @minecraft/server 1.11.0 / server-ui 1.1.0 で動く API だけを使う
+//  - 届いたものはワールドに保存する（ホストが閉じても残る）。ゲストの子の MakeCode には作品が残らないので、
+//    「MakeCode に もどす」で、さいごに届いたプログラムを子どもの MakeCode に開きなおせる（restore.js）
 //
 // 置き場所：behavior_packs/cmk_behavior_system/scripts/codeShare.js
 // 正本：cmk-dev-team/mcee-mkcd-share-system の cmk/codeShare.js
@@ -14,19 +16,65 @@
 import { world, system } from "@minecraft/server";
 import { ActionFormData } from "@minecraft/server-ui";
 import { BLOCKS, MOBS } from "./codeIcons";
+import { buildRestoreUrl } from "./restore";
 
-// 生徒名 -> { programs: Map<コマンド名, { json, mode, at }>, lastAt, lastRunAt }
+// 生徒名 -> { programs: Map<コマンド名, { data, at, batch }>, lastAt, lastRunAt, batch, lastTraceAt }
+//   batch：再生（なぞり）のたびに1つ増える組の番号。いまの組（batch が同じもの）だけを見せる・戻す。
+//   子どもがチャットコマンドを消しても、前の組のものは出てこない
 const students = new Map();
 // 生徒名 -> 受信途中のチャンク { total, parts: Map<part, chunk> }
 const buffers = new Map();
 
+// ------------------------------------------------------------------
+// ワールドへの保存（動的プロパティ）。子ども1人に1つ ＋ 名前の一覧
+// ------------------------------------------------------------------
+const KEY_INDEX = "cmk_code:index";
+const KEY = (name) => `cmk_code:p:${name}`;
+let loaded = false;
+
+function load() {
+    if (loaded) return;
+    loaded = true;
+    try {
+        const names = JSON.parse(world.getDynamicProperty(KEY_INDEX) || "[]");
+        for (const name of names) {
+            const raw = world.getDynamicProperty(KEY(name));
+            if (typeof raw !== "string") continue;
+            const o = JSON.parse(raw);
+            students.set(name, {
+                programs: new Map(o.programs || []),
+                lastAt: o.lastAt || 0, lastRunAt: o.lastRunAt || 0,
+                batch: o.batch || 0, lastTraceAt: o.lastTraceAt || 0,
+            });
+        }
+    } catch (e) { /* こわれていたら、空から始める */ }
+}
+
+function save(name) {
+    try {
+        const s = students.get(name);
+        // いまの組だけを残す（古い組まで持つと、1つの上限 32767 文字を超えうる）
+        const programs = [...s.programs].filter(([, p]) => p.batch === s.batch);
+        let raw = JSON.stringify({ programs, lastAt: s.lastAt, lastRunAt: s.lastRunAt, batch: s.batch, lastTraceAt: s.lastTraceAt });
+        if (raw.length > 30000) return; // 大きすぎるものは保存しない（見る・戻すは、ワールドを開いている間はできる）
+        world.setDynamicProperty(KEY(name), raw);
+        world.setDynamicProperty(KEY_INDEX, JSON.stringify([...students.keys()]));
+    } catch (e) { /* 保存に失敗しても、見る・戻すは続けられる */ }
+}
+
 function entry(name) {
+    load();
     let s = students.get(name);
     if (!s) {
-        s = { programs: new Map(), lastAt: 0, lastRunAt: 0 };
+        s = { programs: new Map(), lastAt: 0, lastRunAt: 0, batch: 0, lastTraceAt: 0 };
         students.set(name, s);
     }
     return s;
+}
+
+// いまの組のプログラム（チャットコマンドの名前順）
+function current(s) {
+    return [...s.programs.values()].filter(p => p.batch === s.batch);
 }
 
 // ------------------------------------------------------------------
@@ -65,9 +113,20 @@ system.afterEvents.scriptEventReceive.subscribe((ev) => {
 
     const now = Date.now();
     const s = entry(name);
-    s.programs.set(data.command || "", { data: data, at: now });
+    const cmd = data.command || "";
+    if (data.mode === "run") {
+        // 実行：その1つだけを新しくする（組は変えない）
+        s.lastRunAt = now;
+        const before = s.programs.get(cmd);
+        s.programs.set(cmd, { data: data, at: now, batch: before ? before.batch : s.batch });
+    } else {
+        // なぞり：再生のたびに、全部のチャットコマンドがまとめて届く。5秒あいたら新しい組
+        if (now - s.lastTraceAt > 5000) s.batch++;
+        s.lastTraceAt = now;
+        s.programs.set(cmd, { data: data, at: now, batch: s.batch });
+    }
     s.lastAt = now;
-    if (data.mode === "run") s.lastRunAt = now;
+    save(name);
 });
 
 // ------------------------------------------------------------------
@@ -180,6 +239,7 @@ function programRows(p, rows) {
 // 先生メニューから開く
 // ------------------------------------------------------------------
 export async function showCodeShareMenu(player) {
+    load();
     const set = new Set();
     for (const p of world.getAllPlayers()) {
         if (!p.hasTag("teacher")) set.add(p.name);
@@ -201,9 +261,10 @@ export async function showCodeShareMenu(player) {
         "・正しいのに動かない → MakeCode の不具合（再起動）\n" +
         "・まちがっている → プログラムのミス"
     );
+    form.button("MakeCode に もどす…", "textures/items/book_writable");
     for (const name of names) {
         const s = students.get(name);
-        if (!s || s.programs.size === 0) {
+        if (!s || current(s).length === 0) {
             form.button(`${name}\n§cまだ届いていない`);
         } else {
             const run = s.lastRunAt ? `うごかした ${ago(s.lastRunAt)}` : "§6まだ うごかしていない";
@@ -213,13 +274,54 @@ export async function showCodeShareMenu(player) {
 
     const res = await form.show(player);
     if (res.canceled || res.selection === undefined) return;
-    await showDetail(player, names[res.selection]);
+    if (res.selection === 0) await showRestoreMenu(player);
+    else await showDetail(player, names[res.selection - 1]);
+}
+
+// ------------------------------------------------------------------
+// MakeCode に もどす：さいごに届いたプログラムを、その子の MakeCode に開く
+// ------------------------------------------------------------------
+async function showRestoreMenu(player) {
+    const online = new Set(world.getAllPlayers().map(p => p.name));
+    const names = [...students.keys()].filter(n => online.has(n) && current(students.get(n)).length > 0);
+
+    const form = new ActionFormData();
+    form.title("MakeCode に もどす");
+    if (names.length === 0) {
+        form.body("もどせる子が いない。\n（ワールドに入っていて、プログラムが届いたことがある子だけが出る）");
+        form.button("もどる");
+        await form.show(player);
+        await showCodeShareMenu(player);
+        return;
+    }
+    form.body("えらんだ子の MakeCode に、さいごに届いたプログラムを開く。\nいま開いている MakeCode の画面は、このプログラムに切りかわる。");
+    for (const n of names) form.button(`${n}\nとどいた：${ago(students.get(n).lastAt)}`);
+    form.button("もどる");
+    const res = await form.show(player);
+    if (res.canceled || res.selection === undefined) return;
+    if (res.selection >= names.length) { await showCodeShareMenu(player); return; }
+
+    const name = names[res.selection];
+    const r = buildRestoreUrl(name, current(students.get(name)).map(p => p.data));
+    if (!r) {
+        player.sendMessage(`§c${name} のプログラムは、ひらがなのブロックではないので もどせない`);
+        return;
+    }
+    system.run(() => {
+        try {
+            world.getDimension("overworld").runCommand(`codebuilder navigate "${name}" true ${r.url}`);
+            player.sendMessage(`${name} の MakeCode に、プログラムを開いた`
+                + (r.skipped.length ? `（もどせなかったブロック：${[...new Set(r.skipped)].join("・")}）` : ""));
+        } catch (e) {
+            player.sendMessage(`§cもどせなかった：${e}`);
+        }
+    });
 }
 
 async function showDetail(player, name) {
     const s = students.get(name);
     const form = new ActionFormData();
-    if (!s || s.programs.size === 0) {
+    if (!s || current(s).length === 0) {
         form.title(`${name} のプログラム`);
         form.body("まだ届いていない。\nMakeCode で再生（みどりのボタン）を押すと、約2秒で届く。\n押しても届かないときは、MakeCode がつながっていない。");
         form.button("一覧へもどる");
@@ -229,7 +331,7 @@ async function showDetail(player, name) {
         form.body("");
         const rows = [];
         let first = true;
-        for (const p of s.programs.values()) {
+        for (const p of current(s)) {
             if (!first) rows.push(row("gap", "p", [], ""));
             first = false;
             programRows(p, rows);

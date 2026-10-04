@@ -78,14 +78,14 @@ def main():
             n += 1
         kind = 'block' if enum == 'Block' else 'mob'
         if str(value) not in table[kind]:
-            table[kind][str(value)] = [glyph, name]
+            table[kind][str(value)] = [glyph, name, f'{enum}.{member}']
 
     os.makedirs(os.path.join(OUT, 'font'), exist_ok=True)
     for page, sheet in pages.items():
         sheet.save(os.path.join(OUT, 'font', f'glyph_{page:02X}.png'))
 
     js = ('// build_icons.py が作る。手で直さない。\n'
-          '// 番号 → [グリフ（アイコン）, 日本語名]。MakeCode for Minecraft v2.1.27 の表とアイコン\n'
+          '// 番号 → [グリフ（アイコン）, 日本語名, MakeCode の名前（作品を戻すとき使う）]。MakeCode for Minecraft v2.1.27 の表とアイコン\n'
           f'export const BLOCKS = {json.dumps(table["block"], ensure_ascii=False)};\n'
           f'export const MOBS = {json.dumps(table["mob"], ensure_ascii=False)};\n')
     open(os.path.join(HERE, 'codeIcons.js'), 'w', encoding='utf-8', newline='\n').write(js)
