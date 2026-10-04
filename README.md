@@ -1,3 +1,15 @@
+# CMK 版について（cmk-dev-team の fork）
+
+この fork は ClassmallKids が、たくのろじぃ先生（[takunology/mcee-mkcd-share-system](https://github.com/takunology/mcee-mkcd-share-system)）の許可をもらって作ったもの。元のリポジトリには手を入れていない。
+
+変えたところ：
+
+- 送る JSON に `mode`（`trace`＝起動時のなぞり／`run`＝チャットコマンドの実行）を足した
+- `cmk/codeShare.js`：CMK のワールドに入れる受け側。先生メニュー → レッスン補助 → 「子どものプログラム」から開く。ブレイズロッドと `server_form.json` は使わない。一覧に「さいごに届いた」「うごかした」を出す
+- ジュニア向けのひらがなブロックは [cmk-dev-team/cmk-hiragana-blocks](https://github.com/cmk-dev-team/cmk-hiragana-blocks)（v1.8.0〜）が同じ形式で送る。`style: "hiragana"` が付く
+
+---
+
 # MakeCode エージェントプログラム共有システム
 
 Minecraft Education で、生徒が **MakeCode のブロックで組んだエージェント操作プログラム**を、先生が**ゲーム内のメニュー（ブレイズロッド）から一覧・閲覧**できるようにする仕組みです。

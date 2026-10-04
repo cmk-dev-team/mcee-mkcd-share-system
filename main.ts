@@ -69,6 +69,7 @@ namespace agentControl {
     let recording = false;
     let executing = true; // false の場合はエージェントを動かさず記録だけ行う
     let currentCommand = "";
+    let currentMode = ""; // "trace"（起動時のなぞり）/ "run"（チャットコマンド実行）
 
     // 起動時の自動トレース(裏側送信)を遅延実行するための待ち行列
     class Pending {
@@ -170,6 +171,7 @@ namespace agentControl {
     function serializeProgram(): string {
         let json = "{";
         json += jsonString("command") + ":" + jsonString(currentCommand) + ",";
+        json += jsonString("mode") + ":" + jsonString(currentMode) + ",";
         json += jsonString("program") + ":" + serializeList(program);
         json += "}";
         return json;
@@ -198,6 +200,7 @@ namespace agentControl {
         program = [];
         containerStack = [program];
         currentCommand = command;
+        currentMode = doExecute ? "run" : "trace";
         recording = true;
         executing = doExecute;
 
