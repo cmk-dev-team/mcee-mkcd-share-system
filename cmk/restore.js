@@ -11,7 +11,7 @@ import LZMA from "./lzma";
 import { BLOCKS, MOBS } from "./codeIcons";
 
 // 作品が使うひらがな拡張。v1.8.0 のタグを打ったら "#v1.8.0" にする
-const HIRAGANA_DEP = "github:cmk-dev-team/cmk-hiragana-blocks#15db5b5d96b3490126a8c435f26e8eac352c00f6";
+const HIRAGANA_DEP = "github:cmk-dev-team/cmk-hiragana-blocks#3610c9570d2686db0e46bbb2eefa73c881dafa52";
 
 const DIR_ENUM = { forward: "Forward", back: "Back", left: "Left", right: "Right", up: "Up", down: "Down" };
 
