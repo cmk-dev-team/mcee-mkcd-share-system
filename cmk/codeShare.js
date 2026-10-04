@@ -156,9 +156,10 @@ function blockColor(c, hira) {
 // タイトルの頭に付ける目印。書式コードだけなので画面には出ない（build_ui.py の PREFIX と同じ）
 const MARK = "§r§1§2§3§r";
 
-// 位置は MakeCode の表示にあわせる（"~ ~ ~" → "~0 ~0 ~0"）
+// 位置は MakeCode の表示にあわせる（"~ ~ ~" → "~0 ~0 ~0"）。
+// MakeCode では位置は別のブロック（青緑）なので、文字の色を変えて見分けられるようにする
 function posText(p) {
-    return String(p || "").replace(/~(?=\s|$)/g, "~0");
+    return "§b" + String(p || "").replace(/~(?=\s|$)/g, "~0") + "§f";
 }
 
 // 1行 ＝ ボタン1つ。アイコンの文字列 "cmk_code:<種類>:<色>:<左の帯>" で見た目を選ぶ
@@ -183,7 +184,8 @@ function programRows(p, rows) {
     const hira = d.style === "hiragana";
     const chat = hira ? "p" : "b";
     const how = d.mode === "run" ? "うごかした" : "ひらいた";
-    rows.push(row("note", chat, [], `${how}とき：${ago(p.at)}`));
+    const ver = hira ? `・ひらがな ${d.ver || "1.8.0-dev2 まで"}` : "";
+    rows.push(row("note", chat, [], `${how}とき：${ago(p.at)}${ver}`));
     rows.push(row("body", chat, [], hira
         ? `チャットコマンド ${d.command || ""} を にゅうりょくしたとき`
         : `チャットコマンド ${d.command || ""} を実行したとき`));
