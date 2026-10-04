@@ -4,6 +4,8 @@
   ui/server_form.json          タイトルが "cmk_code:" で始まるフォームだけ、見た目を差しかえる
   textures/cmk_code/<色>.png   角丸の帯（9スライス）。<色>.json に nineslice_size
 
+タイトルの目印は PREFIX（codeShare.js の MARK と同じ）。
+
 行の指定は、ActionFormData のボタン1つ＝1行。
   ボタンの文字   … 行に出す文言
   ボタンのアイコン … "cmk_code:<種類>:<色>:<左の帯>"
@@ -23,7 +25,7 @@ RAIL_W = 8
 ROW_H = 18
 BOT_H = 7
 MAX_DEPTH = 4
-PREFIX = 'cmk_code:'
+PREFIX = '§r§1§2§3§r'  # タイトルの頭に付ける目印。書式コードだけなので画面には出ない
 
 
 def hexrgb(h):
@@ -72,6 +74,8 @@ def rails(height):
                 'type': 'image',
                 'texture': f'textures/cmk_code/{c}_rail',
                 'size': [RAIL_W, height],
+                'keep_ratio': False,
+                'anchor_from': 'top_left', 'anchor_to': 'top_left',
                 'bindings': visible_if(has(f'|{k}{c}')),
             }})
     return out
@@ -105,21 +109,8 @@ def ui():
         }}],
     }]}
 
-    d['cmk_code_title'] = {
-        'type': 'label',
-        'anchor_from': 'top_middle', 'anchor_to': 'top_middle',
-        'size': ['100% - 14px', 10],
-        'color': [0.3, 0.3, 0.3],
-        'text': '#cmk_title',
-        'bindings': [
-            {'binding_name': '#title_text'},
-            {'binding_type': 'view', 'source_property_name': f"(#title_text - '{PREFIX}')",
-             'target_property_name': '#cmk_title'},
-        ],
-    }
-
     d['cmk_code_form@common_dialogs.main_panel_no_buttons'] = {
-        '$title_panel': 'server_form.cmk_code_title',
+        '$title_panel': 'common_dialogs.standard_title_label',
         '$title_size': ['100% - 14px', 10],
         'size': [440, 260],
         '$text_name': '#title_text',
@@ -164,32 +155,23 @@ def ui():
     bodies = []
     for c in COLORS:
         bodies.append({f'body_{c}': {
-            'type': 'panel',
-            'size': ['100%c', ROW_H],
+            'type': 'image',
+            'texture': f'textures/cmk_code/{c}',
+            'keep_ratio': False,
+            'size': ['100%c + 12px', ROW_H],
+            'anchor_from': 'top_left', 'anchor_to': 'top_left',
             'bindings': visible_if(has(f':body:{c}:')),
-            'controls': [
-                {'text_box': {
-                    'type': 'panel',
-                    'size': ['100%c + 12px', ROW_H],
-                    'layer': 2,
-                    'controls': [{'text': {
-                        'type': 'label',
-                        'anchor_from': 'left_middle', 'anchor_to': 'left_middle',
-                        'offset': [6, 0],
-                        'size': ['default', 10],
-                        'color': [1, 1, 1],
-                        'shadow': False,
-                        'text': '#form_button_text',
-                        'bindings': [dict(text_bind)],
-                    }}],
-                }},
-                {'bg': {
-                    'type': 'image',
-                    'texture': f'textures/cmk_code/{c}',
-                    'size': ['100%sm', '100%sm'],
-                    'layer': 1,
-                }},
-            ],
+            'controls': [{'text': {
+                'type': 'label',
+                'anchor_from': 'left_middle', 'anchor_to': 'left_middle',
+                'offset': [6, 0],
+                'size': ['default', 10],
+                'color': [1, 1, 1],
+                'shadow': False,
+                'layer': 2,
+                'text': '#form_button_text',
+                'bindings': [dict(text_bind)],
+            }}],
         }})
 
     bots = []
@@ -198,6 +180,8 @@ def ui():
             'type': 'image',
             'texture': f'textures/cmk_code/{c}',
             'size': [56, BOT_H],
+            'keep_ratio': False,
+            'anchor_from': 'top_left', 'anchor_to': 'top_left',
             'bindings': visible_if(has(f':bot:{c}:')),
         }})
 

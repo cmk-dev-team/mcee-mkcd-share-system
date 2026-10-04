@@ -123,9 +123,9 @@ function blockText(c, hira) {
             case "turn": return `エージェントの むきを ${dir(c.direction)} に かえる`;
             case "place": return `エージェントに ${dir(c.direction)} へ おく`;
             case "setItem": return `エージェントに ${blockName(c.item)} を ${c.count} コ、もちもの ${c.slot} ばんに せっていする`;
-            case "teleport": return `プレイヤーを ${c.pos} に テレポートさせる`;
-            case "placeAt": return `${blockName(c.item)} を ${c.pos} に おく`;
-            case "spawn": return `${mobName(c.item)} を ${c.pos} に スポーンさせる`;
+            case "teleport": return `プレイヤーを ${posText(c.pos)} に テレポートさせる`;
+            case "placeAt": return `${blockName(c.item)} を ${posText(c.pos)} に おく`;
+            case "spawn": return `${mobName(c.item)} を ${posText(c.pos)} に スポーンさせる`;
             case "repeat": return `${c.times} かい くりかえす`;
         }
     } else {
@@ -151,6 +151,14 @@ function blockColor(c, hira) {
         case "spawn": return "m";
         default: return "a";
     }
+}
+
+// タイトルの頭に付ける目印。書式コードだけなので画面には出ない（build_ui.py の PREFIX と同じ）
+const MARK = "§r§1§2§3§r";
+
+// 位置は MakeCode の表示にあわせる（"~ ~ ~" → "~0 ~0 ~0"）
+function posText(p) {
+    return String(p || "").replace(/~(?=\s|$)/g, "~0");
 }
 
 // 1行 ＝ ボタン1つ。アイコンの文字列 "cmk_code:<種類>:<色>:<左の帯>" で見た目を選ぶ
@@ -231,8 +239,8 @@ async function showDetail(player, name) {
         form.body("まだ届いていない。\nMakeCode で再生（みどりのボタン）を押すと、約2秒で届く。\n押しても届かないときは、MakeCode がつながっていない。");
         form.button("一覧へもどる");
     } else {
-        // タイトルが cmk_code: で始まると、リソースパックの JSON UI がブロックの見た目で出す
-        form.title(`cmk_code:${name} のプログラム`);
+        // タイトルが MARK で始まると、リソースパックの JSON UI がブロックの見た目で出す
+        form.title(`${MARK}${name} のプログラム`);
         form.body("");
         const rows = [];
         let first = true;
