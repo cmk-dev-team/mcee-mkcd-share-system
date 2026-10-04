@@ -23,6 +23,7 @@ TARGET = 'https://cdn.makecode.com/commit/2fe2b363d368587a28e7167eedc3418bd102d1
 JA = 'https://makecode.com/api/translations?lang=ja&filename=minecraft%2Fcore-strings.json&approved=true'
 FIRST_PAGE = 0xE5  # glyph_E5 から使う（E0〜E4 はゲーム本体や他のパックが使うことがあるため避ける）
 CELL = 32
+ICON = 21  # マスの中の絵の大きさ。文字より大きく見えたので 2/3 にした（10/04 Miya）
 
 ENUMS = ['Block', 'AnimalMob', 'MonsterMob', 'CreatureMob']
 
@@ -68,10 +69,11 @@ def main():
         glyph = ''
         if icon and icon.startswith('data:image/png;base64,'):
             im = Image.open(io.BytesIO(base64.b64decode(icon.split(',', 1)[1]))).convert('RGBA')
-            im = im.resize((CELL, CELL), Image.LANCZOS if im.width > CELL else Image.NEAREST)
+            im = im.resize((ICON, ICON), Image.LANCZOS if im.width > ICON else Image.NEAREST)
             page, cell = FIRST_PAGE + n // 256, n % 256
             sheet = pages.setdefault(page, Image.new('RGBA', (CELL * 16, CELL * 16), (0, 0, 0, 0)))
-            sheet.paste(im, ((cell % 16) * CELL, (cell // 16) * CELL))
+            pad = (CELL - ICON) // 2
+            sheet.paste(im, ((cell % 16) * CELL + pad, (cell // 16) * CELL + pad))
             glyph = chr(page * 256 + cell)
             n += 1
         kind = 'block' if enum == 'Block' else 'mob'
