@@ -5,7 +5,9 @@
 変えたところ：
 
 - 送る JSON に `mode`（`trace`＝起動時のなぞり／`run`＝チャットコマンドの実行）を足した
-- `cmk/codeShare.js`：CMK のワールドに入れる受け側。先生メニュー → レッスン補助 → 「子どものプログラム」から開く。ブレイズロッドと `server_form.json` は使わない。一覧に「さいごに届いた」「うごかした」を出す
+- `cmk/codeShare.js`：CMK のワールドに入れる受け側。先生メニュー →「子どものプログラム」から開く。ブレイズロッドと `server_form.json` は使わない。一覧に「さいごに届いた」「うごかした」を出す
+- 子どものプログラムは**ブロックの見た目**で出す（`cmk/build_ui.py` が JSON UI と角丸の帯のテクスチャを作る）。タイトルが `cmk_code:` のフォームだけを差しかえ、ほかのフォームの大きさは元のまま。くりかえしの中は左の色帯で囲む
+- 先生メニューのいちばん上の段（「次にすすむ」の下）から開く
 - ジュニア向けのひらがなブロックは [cmk-dev-team/cmk-hiragana-blocks](https://github.com/cmk-dev-team/cmk-hiragana-blocks)（v1.8.0〜）が同じ形式で送る。`style: "hiragana"` が付く
 
 ---

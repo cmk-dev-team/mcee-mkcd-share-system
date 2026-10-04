@@ -114,52 +114,73 @@ function mobName(id) {
     return MOB_NAMES[id & 0xff] || `いきもの(${id})`;
 }
 
-// プログラムを、MakeCode のブロックの文言どおりの行にする
-function steps(program, depth, hira, lines) {
-    const pad = "| ".repeat(depth);
-    for (const c of program) {
-        let t = null;
-        if (hira) {
-            switch (c.type) {
-                case "callAgent": t = "エージェントを よぶ"; break;
-                case "move": t = `エージェントを ${dir(c.direction)} に ${c.blocks} ブロック うごかす`; break;
-                case "turn": t = `エージェントの むきを ${dir(c.direction)} に かえる`; break;
-                case "place": t = `エージェントに ${dir(c.direction)} へ おく`; break;
-                case "setItem": t = `エージェントに ${blockName(c.item)} を ${c.count} コ、もちもの ${c.slot} ばんに せっていする`; break;
-                case "teleport": t = `プレイヤーを ${c.pos} に テレポートさせる`; break;
-                case "placeAt": t = `${blockName(c.item)} を ${c.pos} に おく`; break;
-                case "spawn": t = `${mobName(c.item)} を ${c.pos} に スポーンさせる`; break;
-                case "repeat": t = `${c.times} かい くりかえす`; break;
-            }
-        } else {
-            switch (c.type) {
-                case "move": t = `エージェントを ${dir(c.direction)} に ${c.blocks} ブロック移動させる`; break;
-                case "turn": t = `エージェントの向きを ${dir(c.direction)} にかえる`; break;
-                case "setItem": t = `エージェントに ${blockName(c.item)} を ${c.count} コ スロット ${c.slot} 番に設定させる`; break;
-                case "place": t = `エージェントに ${dir(c.direction)} へ置かせる`; break;
-                case "repeat": t = `くりかえし ${c.times} 回`; break;
-            }
+// プログラムを、MakeCode のブロックの文言どおりの文にする
+function blockText(c, hira) {
+    if (hira) {
+        switch (c.type) {
+            case "callAgent": return "エージェントを よぶ";
+            case "move": return `エージェントを ${dir(c.direction)} に ${c.blocks} ブロック うごかす`;
+            case "turn": return `エージェントの むきを ${dir(c.direction)} に かえる`;
+            case "place": return `エージェントに ${dir(c.direction)} へ おく`;
+            case "setItem": return `エージェントに ${blockName(c.item)} を ${c.count} コ、もちもの ${c.slot} ばんに せっていする`;
+            case "teleport": return `プレイヤーを ${c.pos} に テレポートさせる`;
+            case "placeAt": return `${blockName(c.item)} を ${c.pos} に おく`;
+            case "spawn": return `${mobName(c.item)} を ${c.pos} に スポーンさせる`;
+            case "repeat": return `${c.times} かい くりかえす`;
         }
-        lines.push(pad + (t || `（${c.type}）`));
+    } else {
+        switch (c.type) {
+            case "move": return `エージェントを ${dir(c.direction)} に ${c.blocks} ブロック移動させる`;
+            case "turn": return `エージェントの向きを ${dir(c.direction)} にかえる`;
+            case "setItem": return `エージェントに ${blockName(c.item)} を ${c.count} コ スロット ${c.slot} 番に設定させる`;
+            case "place": return `エージェントに ${dir(c.direction)} へ置かせる`;
+            case "repeat": return `くりかえし ${c.times} 回`;
+        }
+    }
+    return `（${c.type}）`;
+}
+
+// ブロックの色（JSON UI の build_ui.py と合わせる）
+//  p 青 プレイヤー / a 橙 エージェント / g 緑 くりかえし / k 黄緑 ブロック / m 紫 いきもの / b 茶 標準版
+function blockColor(c, hira) {
+    if (!hira) return "b";
+    switch (c.type) {
+        case "repeat": return "g";
+        case "teleport": return "p";
+        case "placeAt": return "k";
+        case "spawn": return "m";
+        default: return "a";
+    }
+}
+
+// 1行 ＝ ボタン1つ。アイコンの文字列 "cmk_code:<種類>:<色>:<左の帯>" で見た目を選ぶ
+function row(kind, color, rails, text) {
+    const r = rails.map((c, i) => `|${i + 1}${c}`).join("");
+    return { text: text, icon: `cmk_code:${kind}:${color}:${r}` };
+}
+
+function addRows(program, rails, hira, rows) {
+    for (const c of program) {
+        const color = blockColor(c, hira);
+        rows.push(row("body", color, rails, blockText(c, hira)));
         if (c.type === "repeat") {
-            steps(c.children || [], depth + 1, hira, lines);
-            lines.push(`${pad}+--`);
+            addRows(c.children || [], rails.concat([color]), hira, rows);
+            rows.push(row("bot", color, rails, ""));
         }
     }
 }
 
-function describe(p) {
+function programRows(p, rows) {
     const d = p.data;
     const hira = d.style === "hiragana";
-    const lines = [];
+    const chat = hira ? "p" : "b";
     const how = d.mode === "run" ? "うごかした" : "ひらいた";
-    lines.push(`§7${how}とき：${ago(p.at)}§r`);
-    lines.push(hira
+    rows.push(row("note", chat, [], `${how}とき：${ago(p.at)}`));
+    rows.push(row("body", chat, [], hira
         ? `チャットコマンド ${d.command || ""} を にゅうりょくしたとき`
-        : `チャットコマンド ${d.command || ""} を実行したとき`);
-    steps(d.program || [], 0, hira, lines);
-    if (lines.length === 2) lines.push("（なにも入っていない）");
-    return lines.join("\n");
+        : `チャットコマンド ${d.command || ""} を実行したとき`));
+    addRows(d.program || [], [chat], hira, rows);
+    rows.push(row("bot", chat, [], ""));
 }
 
 // ------------------------------------------------------------------
@@ -204,22 +225,25 @@ export async function showCodeShareMenu(player) {
 
 async function showDetail(player, name) {
     const s = students.get(name);
-    let body;
-    if (!s || s.programs.size === 0) {
-        body = "まだ届いていない。\nMakeCode で再生（みどりのボタン）を押すと、約2秒で届く。\n押しても届かないときは、MakeCode がつながっていない。";
-    } else {
-        const parts = [];
-        for (const p of s.programs.values()) parts.push(describe(p));
-        body = parts.join("\n\n");
-    }
-
     const form = new ActionFormData();
-    form.title(`${name} のプログラム`);
-    form.body(body);
-    form.button("もういちど見る");
-    form.button("一覧へもどる");
-    const res = await form.show(player);
-    if (res.canceled || res.selection === undefined) return;
-    if (res.selection === 0) await showDetail(player, name);
-    else await showCodeShareMenu(player);
+    if (!s || s.programs.size === 0) {
+        form.title(`${name} のプログラム`);
+        form.body("まだ届いていない。\nMakeCode で再生（みどりのボタン）を押すと、約2秒で届く。\n押しても届かないときは、MakeCode がつながっていない。");
+        form.button("一覧へもどる");
+    } else {
+        // タイトルが cmk_code: で始まると、リソースパックの JSON UI がブロックの見た目で出す
+        form.title(`cmk_code:${name} のプログラム`);
+        form.body("");
+        const rows = [];
+        let first = true;
+        for (const p of s.programs.values()) {
+            if (!first) rows.push(row("gap", "p", [], ""));
+            first = false;
+            programRows(p, rows);
+        }
+        for (const r of rows) form.button(r.text, r.icon);
+    }
+    // 閉じても（×）一覧へもどる。一覧を閉じればおわり
+    await form.show(player);
+    await showCodeShareMenu(player);
 }

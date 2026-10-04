@@ -1,0 +1,1975 @@
+{
+  "namespace": "server_form",
+  "long_form@common_dialogs.main_panel_no_buttons": {
+    "$title_panel": "common_dialogs.standard_title_label",
+    "$title_size": [
+      "100% - 14px",
+      10
+    ],
+    "size": [
+      225,
+      200
+    ],
+    "$text_name": "#title_text",
+    "$title_text_binding_type": "none",
+    "$child_control": "server_form.long_form_panel",
+    "layer": 2,
+    "bindings": [
+      {
+        "binding_name": "#title_text"
+      },
+      {
+        "binding_type": "view",
+        "source_property_name": "((#title_text - 'cmk_code:') = #title_text)",
+        "target_property_name": "#visible"
+      }
+    ]
+  },
+  "main_screen_content": {
+    "modifications": [
+      {
+        "array_name": "controls",
+        "operation": "insert_back",
+        "value": [
+          {
+            "cmk_code_factory": {
+              "type": "panel",
+              "factory": {
+                "name": "server_form_factory",
+                "control_ids": {
+                  "long_form": "@server_form.cmk_code_form"
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "cmk_code_title": {
+    "type": "label",
+    "anchor_from": "top_middle",
+    "anchor_to": "top_middle",
+    "size": [
+      "100% - 14px",
+      10
+    ],
+    "color": [
+      0.3,
+      0.3,
+      0.3
+    ],
+    "text": "#cmk_title",
+    "bindings": [
+      {
+        "binding_name": "#title_text"
+      },
+      {
+        "binding_type": "view",
+        "source_property_name": "(#title_text - 'cmk_code:')",
+        "target_property_name": "#cmk_title"
+      }
+    ]
+  },
+  "cmk_code_form@common_dialogs.main_panel_no_buttons": {
+    "$title_panel": "server_form.cmk_code_title",
+    "$title_size": [
+      "100% - 14px",
+      10
+    ],
+    "size": [
+      440,
+      260
+    ],
+    "$text_name": "#title_text",
+    "$title_text_binding_type": "none",
+    "$child_control": "server_form.cmk_code_scroll",
+    "layer": 3,
+    "bindings": [
+      {
+        "binding_name": "#title_text"
+      },
+      {
+        "binding_type": "view",
+        "source_property_name": "(not ((#title_text - 'cmk_code:') = #title_text))",
+        "target_property_name": "#visible"
+      }
+    ]
+  },
+  "cmk_code_scroll@common.scrolling_panel": {
+    "anchor_to": "top_left",
+    "anchor_from": "top_left",
+    "$show_background": false,
+    "size": [
+      "100%",
+      "100%"
+    ],
+    "$scrolling_content": "server_form.cmk_code_rows",
+    "$scroll_size": [
+      5,
+      "100% - 4px"
+    ],
+    "$scrolling_pane_size": [
+      "100% - 4px",
+      "100% - 2px"
+    ],
+    "$scrolling_pane_offset": [
+      2,
+      0
+    ],
+    "$scroll_bar_right_padding_size": [
+      0,
+      0
+    ]
+  },
+  "cmk_code_rows": {
+    "type": "stack_panel",
+    "orientation": "vertical",
+    "size": [
+      "100% - 12px",
+      "100%c"
+    ],
+    "anchor_from": "top_left",
+    "anchor_to": "top_left",
+    "offset": [
+      6,
+      6
+    ],
+    "factory": {
+      "name": "buttons",
+      "control_ids": {
+        "button": "@server_form.cmk_code_row",
+        "label": "@server_form.cmk_code_row",
+        "header": "@server_form.cmk_code_row",
+        "divider": "@server_form.cmk_code_row"
+      }
+    },
+    "collection_name": "form_buttons",
+    "bindings": [
+      {
+        "binding_name": "#form_button_contents",
+        "binding_name_override": "#collection_length"
+      }
+    ]
+  },
+  "cmk_code_row": {
+    "type": "stack_panel",
+    "orientation": "vertical",
+    "size": [
+      "100%",
+      "100%c"
+    ],
+    "bindings": [
+      {
+        "binding_type": "collection_details",
+        "binding_collection_name": "form_buttons"
+      }
+    ],
+    "controls": [
+      {
+        "row_body": {
+          "type": "stack_panel",
+          "orientation": "horizontal",
+          "size": [
+            "100%",
+            18
+          ],
+          "bindings": [
+            {
+              "binding_name": "#form_button_texture",
+              "binding_name_override": "#cmk_tex",
+              "binding_type": "collection",
+              "binding_collection_name": "form_buttons"
+            },
+            {
+              "binding_type": "view",
+              "source_property_name": "(not ((#cmk_tex - ':body:') = #cmk_tex))",
+              "target_property_name": "#visible"
+            }
+          ],
+          "controls": [
+            {
+              "rail_1p": {
+                "type": "image",
+                "texture": "textures/cmk_code/p_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|1p') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_1a": {
+                "type": "image",
+                "texture": "textures/cmk_code/a_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|1a') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_1g": {
+                "type": "image",
+                "texture": "textures/cmk_code/g_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|1g') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_1k": {
+                "type": "image",
+                "texture": "textures/cmk_code/k_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|1k') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_1m": {
+                "type": "image",
+                "texture": "textures/cmk_code/m_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|1m') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_1b": {
+                "type": "image",
+                "texture": "textures/cmk_code/b_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|1b') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_2p": {
+                "type": "image",
+                "texture": "textures/cmk_code/p_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|2p') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_2a": {
+                "type": "image",
+                "texture": "textures/cmk_code/a_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|2a') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_2g": {
+                "type": "image",
+                "texture": "textures/cmk_code/g_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|2g') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_2k": {
+                "type": "image",
+                "texture": "textures/cmk_code/k_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|2k') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_2m": {
+                "type": "image",
+                "texture": "textures/cmk_code/m_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|2m') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_2b": {
+                "type": "image",
+                "texture": "textures/cmk_code/b_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|2b') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_3p": {
+                "type": "image",
+                "texture": "textures/cmk_code/p_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|3p') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_3a": {
+                "type": "image",
+                "texture": "textures/cmk_code/a_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|3a') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_3g": {
+                "type": "image",
+                "texture": "textures/cmk_code/g_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|3g') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_3k": {
+                "type": "image",
+                "texture": "textures/cmk_code/k_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|3k') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_3m": {
+                "type": "image",
+                "texture": "textures/cmk_code/m_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|3m') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_3b": {
+                "type": "image",
+                "texture": "textures/cmk_code/b_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|3b') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_4p": {
+                "type": "image",
+                "texture": "textures/cmk_code/p_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|4p') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_4a": {
+                "type": "image",
+                "texture": "textures/cmk_code/a_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|4a') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_4g": {
+                "type": "image",
+                "texture": "textures/cmk_code/g_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|4g') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_4k": {
+                "type": "image",
+                "texture": "textures/cmk_code/k_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|4k') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_4m": {
+                "type": "image",
+                "texture": "textures/cmk_code/m_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|4m') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_4b": {
+                "type": "image",
+                "texture": "textures/cmk_code/b_rail",
+                "size": [
+                  8,
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|4b') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "body_p": {
+                "type": "panel",
+                "size": [
+                  "100%c",
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - ':body:p:') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ],
+                "controls": [
+                  {
+                    "text_box": {
+                      "type": "panel",
+                      "size": [
+                        "100%c + 12px",
+                        18
+                      ],
+                      "layer": 2,
+                      "controls": [
+                        {
+                          "text": {
+                            "type": "label",
+                            "anchor_from": "left_middle",
+                            "anchor_to": "left_middle",
+                            "offset": [
+                              6,
+                              0
+                            ],
+                            "size": [
+                              "default",
+                              10
+                            ],
+                            "color": [
+                              1,
+                              1,
+                              1
+                            ],
+                            "shadow": false,
+                            "text": "#form_button_text",
+                            "bindings": [
+                              {
+                                "binding_name": "#form_button_text",
+                                "binding_type": "collection",
+                                "binding_collection_name": "form_buttons"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "bg": {
+                      "type": "image",
+                      "texture": "textures/cmk_code/p",
+                      "size": [
+                        "100%sm",
+                        "100%sm"
+                      ],
+                      "layer": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "body_a": {
+                "type": "panel",
+                "size": [
+                  "100%c",
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - ':body:a:') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ],
+                "controls": [
+                  {
+                    "text_box": {
+                      "type": "panel",
+                      "size": [
+                        "100%c + 12px",
+                        18
+                      ],
+                      "layer": 2,
+                      "controls": [
+                        {
+                          "text": {
+                            "type": "label",
+                            "anchor_from": "left_middle",
+                            "anchor_to": "left_middle",
+                            "offset": [
+                              6,
+                              0
+                            ],
+                            "size": [
+                              "default",
+                              10
+                            ],
+                            "color": [
+                              1,
+                              1,
+                              1
+                            ],
+                            "shadow": false,
+                            "text": "#form_button_text",
+                            "bindings": [
+                              {
+                                "binding_name": "#form_button_text",
+                                "binding_type": "collection",
+                                "binding_collection_name": "form_buttons"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "bg": {
+                      "type": "image",
+                      "texture": "textures/cmk_code/a",
+                      "size": [
+                        "100%sm",
+                        "100%sm"
+                      ],
+                      "layer": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "body_g": {
+                "type": "panel",
+                "size": [
+                  "100%c",
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - ':body:g:') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ],
+                "controls": [
+                  {
+                    "text_box": {
+                      "type": "panel",
+                      "size": [
+                        "100%c + 12px",
+                        18
+                      ],
+                      "layer": 2,
+                      "controls": [
+                        {
+                          "text": {
+                            "type": "label",
+                            "anchor_from": "left_middle",
+                            "anchor_to": "left_middle",
+                            "offset": [
+                              6,
+                              0
+                            ],
+                            "size": [
+                              "default",
+                              10
+                            ],
+                            "color": [
+                              1,
+                              1,
+                              1
+                            ],
+                            "shadow": false,
+                            "text": "#form_button_text",
+                            "bindings": [
+                              {
+                                "binding_name": "#form_button_text",
+                                "binding_type": "collection",
+                                "binding_collection_name": "form_buttons"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "bg": {
+                      "type": "image",
+                      "texture": "textures/cmk_code/g",
+                      "size": [
+                        "100%sm",
+                        "100%sm"
+                      ],
+                      "layer": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "body_k": {
+                "type": "panel",
+                "size": [
+                  "100%c",
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - ':body:k:') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ],
+                "controls": [
+                  {
+                    "text_box": {
+                      "type": "panel",
+                      "size": [
+                        "100%c + 12px",
+                        18
+                      ],
+                      "layer": 2,
+                      "controls": [
+                        {
+                          "text": {
+                            "type": "label",
+                            "anchor_from": "left_middle",
+                            "anchor_to": "left_middle",
+                            "offset": [
+                              6,
+                              0
+                            ],
+                            "size": [
+                              "default",
+                              10
+                            ],
+                            "color": [
+                              1,
+                              1,
+                              1
+                            ],
+                            "shadow": false,
+                            "text": "#form_button_text",
+                            "bindings": [
+                              {
+                                "binding_name": "#form_button_text",
+                                "binding_type": "collection",
+                                "binding_collection_name": "form_buttons"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "bg": {
+                      "type": "image",
+                      "texture": "textures/cmk_code/k",
+                      "size": [
+                        "100%sm",
+                        "100%sm"
+                      ],
+                      "layer": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "body_m": {
+                "type": "panel",
+                "size": [
+                  "100%c",
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - ':body:m:') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ],
+                "controls": [
+                  {
+                    "text_box": {
+                      "type": "panel",
+                      "size": [
+                        "100%c + 12px",
+                        18
+                      ],
+                      "layer": 2,
+                      "controls": [
+                        {
+                          "text": {
+                            "type": "label",
+                            "anchor_from": "left_middle",
+                            "anchor_to": "left_middle",
+                            "offset": [
+                              6,
+                              0
+                            ],
+                            "size": [
+                              "default",
+                              10
+                            ],
+                            "color": [
+                              1,
+                              1,
+                              1
+                            ],
+                            "shadow": false,
+                            "text": "#form_button_text",
+                            "bindings": [
+                              {
+                                "binding_name": "#form_button_text",
+                                "binding_type": "collection",
+                                "binding_collection_name": "form_buttons"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "bg": {
+                      "type": "image",
+                      "texture": "textures/cmk_code/m",
+                      "size": [
+                        "100%sm",
+                        "100%sm"
+                      ],
+                      "layer": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "body_b": {
+                "type": "panel",
+                "size": [
+                  "100%c",
+                  18
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - ':body:b:') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ],
+                "controls": [
+                  {
+                    "text_box": {
+                      "type": "panel",
+                      "size": [
+                        "100%c + 12px",
+                        18
+                      ],
+                      "layer": 2,
+                      "controls": [
+                        {
+                          "text": {
+                            "type": "label",
+                            "anchor_from": "left_middle",
+                            "anchor_to": "left_middle",
+                            "offset": [
+                              6,
+                              0
+                            ],
+                            "size": [
+                              "default",
+                              10
+                            ],
+                            "color": [
+                              1,
+                              1,
+                              1
+                            ],
+                            "shadow": false,
+                            "text": "#form_button_text",
+                            "bindings": [
+                              {
+                                "binding_name": "#form_button_text",
+                                "binding_type": "collection",
+                                "binding_collection_name": "form_buttons"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "bg": {
+                      "type": "image",
+                      "texture": "textures/cmk_code/b",
+                      "size": [
+                        "100%sm",
+                        "100%sm"
+                      ],
+                      "layer": 1
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "row_bot": {
+          "type": "stack_panel",
+          "orientation": "horizontal",
+          "size": [
+            "100%",
+            7
+          ],
+          "bindings": [
+            {
+              "binding_name": "#form_button_texture",
+              "binding_name_override": "#cmk_tex",
+              "binding_type": "collection",
+              "binding_collection_name": "form_buttons"
+            },
+            {
+              "binding_type": "view",
+              "source_property_name": "(not ((#cmk_tex - ':bot:') = #cmk_tex))",
+              "target_property_name": "#visible"
+            }
+          ],
+          "controls": [
+            {
+              "rail_1p": {
+                "type": "image",
+                "texture": "textures/cmk_code/p_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|1p') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_1a": {
+                "type": "image",
+                "texture": "textures/cmk_code/a_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|1a') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_1g": {
+                "type": "image",
+                "texture": "textures/cmk_code/g_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|1g') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_1k": {
+                "type": "image",
+                "texture": "textures/cmk_code/k_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|1k') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_1m": {
+                "type": "image",
+                "texture": "textures/cmk_code/m_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|1m') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_1b": {
+                "type": "image",
+                "texture": "textures/cmk_code/b_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|1b') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_2p": {
+                "type": "image",
+                "texture": "textures/cmk_code/p_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|2p') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_2a": {
+                "type": "image",
+                "texture": "textures/cmk_code/a_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|2a') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_2g": {
+                "type": "image",
+                "texture": "textures/cmk_code/g_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|2g') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_2k": {
+                "type": "image",
+                "texture": "textures/cmk_code/k_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|2k') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_2m": {
+                "type": "image",
+                "texture": "textures/cmk_code/m_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|2m') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_2b": {
+                "type": "image",
+                "texture": "textures/cmk_code/b_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|2b') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_3p": {
+                "type": "image",
+                "texture": "textures/cmk_code/p_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|3p') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_3a": {
+                "type": "image",
+                "texture": "textures/cmk_code/a_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|3a') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_3g": {
+                "type": "image",
+                "texture": "textures/cmk_code/g_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|3g') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_3k": {
+                "type": "image",
+                "texture": "textures/cmk_code/k_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|3k') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_3m": {
+                "type": "image",
+                "texture": "textures/cmk_code/m_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|3m') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_3b": {
+                "type": "image",
+                "texture": "textures/cmk_code/b_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|3b') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_4p": {
+                "type": "image",
+                "texture": "textures/cmk_code/p_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|4p') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_4a": {
+                "type": "image",
+                "texture": "textures/cmk_code/a_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|4a') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_4g": {
+                "type": "image",
+                "texture": "textures/cmk_code/g_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|4g') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_4k": {
+                "type": "image",
+                "texture": "textures/cmk_code/k_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|4k') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_4m": {
+                "type": "image",
+                "texture": "textures/cmk_code/m_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|4m') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "rail_4b": {
+                "type": "image",
+                "texture": "textures/cmk_code/b_rail",
+                "size": [
+                  8,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - '|4b') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "bot_p": {
+                "type": "image",
+                "texture": "textures/cmk_code/p",
+                "size": [
+                  56,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - ':bot:p:') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "bot_a": {
+                "type": "image",
+                "texture": "textures/cmk_code/a",
+                "size": [
+                  56,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - ':bot:a:') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "bot_g": {
+                "type": "image",
+                "texture": "textures/cmk_code/g",
+                "size": [
+                  56,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - ':bot:g:') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "bot_k": {
+                "type": "image",
+                "texture": "textures/cmk_code/k",
+                "size": [
+                  56,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - ':bot:k:') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "bot_m": {
+                "type": "image",
+                "texture": "textures/cmk_code/m",
+                "size": [
+                  56,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - ':bot:m:') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            },
+            {
+              "bot_b": {
+                "type": "image",
+                "texture": "textures/cmk_code/b",
+                "size": [
+                  56,
+                  7
+                ],
+                "bindings": [
+                  {
+                    "binding_name": "#form_button_texture",
+                    "binding_name_override": "#cmk_tex",
+                    "binding_type": "collection",
+                    "binding_collection_name": "form_buttons"
+                  },
+                  {
+                    "binding_type": "view",
+                    "source_property_name": "(not ((#cmk_tex - ':bot:b:') = #cmk_tex))",
+                    "target_property_name": "#visible"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "row_note": {
+          "type": "label",
+          "size": [
+            "100%",
+            12
+          ],
+          "color": [
+            0.35,
+            0.35,
+            0.35
+          ],
+          "font_scale_factor": 0.8,
+          "text": "#form_button_text",
+          "bindings": [
+            {
+              "binding_name": "#form_button_text",
+              "binding_type": "collection",
+              "binding_collection_name": "form_buttons"
+            },
+            {
+              "binding_name": "#form_button_texture",
+              "binding_name_override": "#cmk_tex",
+              "binding_type": "collection",
+              "binding_collection_name": "form_buttons"
+            },
+            {
+              "binding_type": "view",
+              "source_property_name": "(not ((#cmk_tex - ':note:') = #cmk_tex))",
+              "target_property_name": "#visible"
+            }
+          ]
+        }
+      },
+      {
+        "row_gap": {
+          "type": "panel",
+          "size": [
+            "100%",
+            10
+          ],
+          "bindings": [
+            {
+              "binding_name": "#form_button_texture",
+              "binding_name_override": "#cmk_tex",
+              "binding_type": "collection",
+              "binding_collection_name": "form_buttons"
+            },
+            {
+              "binding_type": "view",
+              "source_property_name": "(not ((#cmk_tex - ':gap:') = #cmk_tex))",
+              "target_property_name": "#visible"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
